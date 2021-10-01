@@ -91,6 +91,23 @@ router.post('/create-channel', async (req, res) => {
   }
 });
 
+router.post('/rename-channel', async (req, res) => {
+  //add members to created channel
+  //sync users to add
+  //find channel by id
+  //add members to channel
+  //return channel id
+  try {
+    const reqBody = req.body;
+    const { channelId, name } = req.body;
+    const channel = await handleFindChannelById(reqBody.channelId);
+    await channel.updatePartial({ set: { name: name } });
+    res.json(channel.cid);
+  } catch (error) {
+    console.log('add members caught', error);
+  }
+});
+
 router.post('/add-members', async (req, res) => {
   //add members to created channel
   //sync users to add
@@ -110,6 +127,25 @@ router.post('/add-members', async (req, res) => {
     res.json(channel.cid);
   } catch (error) {
     console.log('add members caught', error);
+  }
+});
+
+router.post('/remove-members', async (req, res) => {
+  //remove members from channel
+  //find channel by id
+  //remove members from channel
+  //return channel id
+  try {
+    const reqBody = req.body;
+    const { memberIds, channelId } = reqBody;
+    const channel = await handleFindChannelById(reqBody.channelId);
+
+    console.log('remove members', { memberIds });
+    await channel.removeMembers(memberIds);
+    // await channel.removeMembers(['tommaso']);
+    res.json(channel.cid);
+  } catch (error) {
+    console.log('remove members caught', error);
   }
 });
 
